@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>S-DES Calculator</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/logo.png" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<!--===============================================================================================-->
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="js/permutations.js"></script>
+</head>
+
+<body>
+	<div class="container-contact100">
+		<div class="wrap-contact100">
+			<form class="contact100-form validate-form" id="form" onsubmit="return false;">
+				<span class="contact100-form-title">
+					Simplified DES (S-DES) Calculator
+				</span>
+
+				<div class="wrap-input100">
+					<span class="label-input100">8-bit binary Plaintext atau Ciphertext</span>
+					<input class="input100" type="text" placeholder="Enter 8-bit binary" id="inputText" maxlength="8" />
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">10-bit binary key</span>
+					<input class="input100" type="text" placeholder="Enter 10-bit binary key" id="inputKey"
+						maxlength="10" />
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Enkripsi atau Dekripsi</span>
+					<div>
+						<input type="radio" id="startMeChecked" name="encryptFlag" value="encrypt" checked
+							onclick="setEncryptFlag(true);"> Encrypt
+						<input type="radio" name="encryptFlag" value="decrypt" onclick="setEncryptFlag(false);"> Decrypt
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="container-contact100-form-btn">
+					<div class="wrap-contact100-form-btn">
+						
+							<button class="contact100-form-btn" type="submit" value="SUBMIT" onclick="inputHandler();">SUBMIT</button>
+					</div>
+					<div class="wrap-contact100-form-btn">
+
+							<button class="contact100-form-btn-reset" type="reset">RESET</button>
+
+					</div>
+				</div>
+			</form>
+
+			<div id="inputError" style="display: none">
+				Ada masalah saat mengkalkulasi. Silakan masukan input-an yang benar!
+			</div>
+
+			<div id="TESTING"></div>
+
+			<br />
+			<hr class="mainDivider" />
+
+			<div id="detailedOutput">
+				<h2>Diketahui:</h2>
+				<h3>Input</h3>
+				<table>
+
+					<body>
+						<tr id="originalText"></tr>
+					</body>
+				</table>
+
+				<h3>Key</h3>
+				<table>
+
+					<body>
+						<tr id="originalKey"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="mainDivider" />
+
+				<h2>Generate Keys (K1 & K2)</h2>
+				<h3>Key</h3>
+				<table>
+
+					<body>
+						<tr id="originalKeyCopy"></tr>
+					</body>
+				</table>
+
+				<h3>Setelah dilakukan permutasi P10</h3>
+				<table>
+
+					<body>
+						<tr id="afterP10Key"></tr>
+					</body>
+				</table>
+
+				<h3>Bagi Key P10 menjadi 2 bagian</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri</h4>
+						<table>
+
+							<body>
+								<tr id="afterFirstSplitLeft"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan</h4>
+						<table>
+
+							<body>
+								<tr id="afterFirstSplitRight"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Lakukan pergeseran ke kiri atau Left Shift sebanyak 1 kali (LS-1)</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri LS-1</h4>
+						<table>
+
+							<body>
+								<tr id="afterLeftLS1"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan LS-1</h4>
+						<table>
+
+							<body>
+								<tr id="afterRightLS1"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Mencari K1</h3>
+				<h4>
+					Untuk menentukkan K1, selesaikan dengan mengambil hasil pergeseran dengan permutasi P8
+				</h4>
+				<table>
+
+					<body>
+						<tr id="subKeyK1"></tr>
+					</body>
+				</table>
+
+				<h3>Lakukan pergeseran ke kiri atau Left Shift sebanyak 2 kali pada hasil LS-1 (LS-2)</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri LS-2</h4>
+						<table>
+
+							<body>
+								<tr id="afterLeftLS2"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan LS-2</h4>
+						<table>
+
+							<body>
+								<tr id="afterRightLS2"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Mencari K2</h3>
+				<h4>
+					Untuk menentukkan K2, selesaikan dengan mengambil hasil LS-2 dengan permutasi P8
+				</h4>
+				<table>
+
+					<body>
+						<tr id="subKeyK2"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="mainDivider" />
+
+				<h2>Proses Encrypt/Decrypt</h2>
+				<h3>Input</h3>
+				<table>
+
+					<body>
+						<tr id="originalTextCopy"></tr>
+					</body>
+				</table>
+				<h3>K1</h3>
+				<table>
+
+					<body>
+						<tr id="subKeyK1Copy"></tr>
+					</body>
+				</table>
+				<h3>K2</h3>
+				<table>
+
+					<body>
+						<tr id="subKeyK2Copy"></tr>
+					</body>
+				</table>
+
+				<h3>Ubah 8-bit plaintext/ciphertext dengan initial permutation IP</h3>
+				<table>
+
+					<body>
+						<tr id="afterIP"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="inBetweenDivider" />
+
+				<h2>Round Function 1</h2>
+
+				<h3>Bagi IP menjadi 2 bagian</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri IP</h4>
+						<table>
+
+							<body>
+								<tr id="afterIPSplitLeft"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan IP</h4>
+						<table>
+
+							<body>
+								<tr id="afterIPSplitRight"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Ambil 4-bit bagian KANAN, lakukan Expansion Permutation (Ep)</h3>
+				<table>
+
+					<body>
+						<tr id="afterEPRound1"></tr>
+					</body>
+				</table>
+
+				<h3>
+					XOR dengan: K1 (untuk encrypt) // K2 (untuk decrypt)
+				</h3>
+				<table>
+
+					<body>
+						<tr id="afterXORK1"></tr>
+					</body>
+				</table>
+
+				<h3>Bagi hasil XOR menjadi 2 bagian</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri hasil XOR</h4>
+						<table>
+
+							<body>
+								<tr id="afterXORK1SplitLeft"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan hasil XOR</h4>
+						<table>
+
+							<body>
+								<tr id="afterXORK1SplitRight"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Proses Substitions Box</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">S-box S0</h4>
+						<table>
+
+							<body>
+								<tr id="afterS0Round1"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">S-box S1</h4>
+						<table>
+
+							<body>
+								<tr id="afterS1Round1"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Hasil S-Box diacak oleh P4</h3>
+				<table>
+
+					<body>
+						<tr id="afterP4Round1"></tr>
+					</body>
+				</table>
+
+				<h3>XOR oleh 4-bit KIRI DARI HASIL IP</h3>
+				<table>
+
+					<body>
+						<tr id="afterFinalXORRound1"></tr>
+					</body>
+				</table>
+
+				<h3>Gabungkan dengan 4-bit KANAN HASIL IP</h3>
+				<table>
+
+					<body>
+						<tr id="resultOfRoundFunctionFK1"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="inBetweenDivider" />
+
+				<h3>Lakukan Swap (SW)</h3>
+				<table>
+
+					<body>
+						<tr id="afterSwitch"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="mainDivider" />
+
+				<h2>Round Function 2</h2>
+
+				<h3>Bagi SW menjadi 2 bagian</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri SW</h4>
+						<table>
+
+							<body>
+								<tr id="afterSwitchSplitLeft"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan SW</h4>
+						<table>
+
+							<body>
+								<tr id="afterSwitchSplitRight"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Ambil 4-bit bagian KANAN, lakukan Expansion Permutation (Ep)</h3>
+				<table>
+
+					<body>
+						<tr id="afterEPRound2"></tr>
+					</body>
+				</table>
+
+				<h3>
+					XOR dengan: k2 (untuk encrypt) // k1 (untuk decrypt)
+				</h3>
+				<table>
+
+					<body>
+						<tr id="afterXORK2"></tr>
+					</body>
+				</table>
+
+				<h3>Bagi hasil XOR menjadi 2 bagian</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kiri hasil XOR</h4>
+						<table>
+
+							<body>
+								<tr id="afterXORK2SplitLeft"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">Bagian kanan hasil XOR</h4>
+						<table>
+
+							<body>
+								<tr id="afterXORK2SplitRight"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Proses Substitions Box</h3>
+				<div class="splitTableContainer">
+					<div class="splitTable">
+						<h4 class="removeTopMargin">S-box S0</h4>
+						<table>
+
+							<body>
+								<tr id="afterS0Round2"></tr>
+							</body>
+						</table>
+					</div>
+					<div class="splitTable">
+						<h4 class="removeTopMargin">S-box S1</h4>
+						<table>
+
+							<body>
+								<tr id="afterS1Round2"></tr>
+							</body>
+						</table>
+					</div>
+				</div>
+
+				<h3>Hasil S-Box diacak oleh P4</h3>
+				<table>
+
+					<body>
+						<tr id="afterP4Round2"></tr>
+					</body>
+				</table>
+
+				<h3>XOR oleh 4-bit KIRI DARI HASIL SW</h3>
+				<table>
+
+					<body>
+						<tr id="afterFinalXORRound2"></tr>
+					</body>
+				</table>
+
+				<h3>Gabungkan dengan 4-bit KANAN HASIL SW</h3>
+				<table>
+
+					<body>
+						<tr id="resultOfRoundFunctionFK2"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="inBetweenDivider" />
+
+				<h3>Dari hasil pengacakan dengan IP Inverse, maka didapatkan hasilnya</h3>
+				<table>
+
+					<body>
+						<tr id="finalResult"></tr>
+					</body>
+				</table>
+
+				<br />
+				<hr class="mainDivider" />
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$("#detailedOutput").hide();
+		$("#inputError").hide();
+		$("#startMeChecked").prop("checked", true);
+		encryptFlag = true;
+	</script>
+
+	<div id="dropDownSelect1"></div>
+
+	<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+	<script>
+		$(".selection-2").select2({
+			minimumResultsForSearch: 20,
+			dropdownParent: $("#dropDownSelect1"),
+		});
+	</script>
+	<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+</body>
+
+</html>
