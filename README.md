@@ -12,6 +12,9 @@ Simplified DES atau S-DES adalah kriptografi yang di desain untuk tujuan edukasi
 >"Tetap ribet tapi lebih sederhana"
 
 ### :camera: Screenshot Web:
-<img src="https://github.com/fauzanakmalh1/Simplified-DES-Calculator/blob/master/images/screenshots/screenshot-01.png" alt="Screenshot Web 01">
+* Enkripsi
+<img src="https://github.com/fauzanakmalh1/Simplified-DES-Calculator/blob/master/images/screenshots/S-DES-Calculator-Encrypt.png" alt="Encryption-Screenshot">
+* Dekripsi
+<img src="https://github.com/fauzanakmalh1/Simplified-DES-Calculator/blob/master/images/screenshots/S-DES-Calculator-Decrypt.png" alt="Decryption-Screenshot">
 
 >&copy; S-DES-Team-ITDeveloper
